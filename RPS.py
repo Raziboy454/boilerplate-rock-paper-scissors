@@ -15,7 +15,7 @@ def player(prev_play,
     patterns = state['patterns']
     N = state['N']
 
-    # --- 1. CRITICAL STATE MANAGEMENT (Reset for new opponent) ---
+    #  CRITICAL STATE MANAGEMENT (Reset for new opponent) 
     # The initial call to a new opponent has prev_play = "" and history is NOT empty from the previous opponent.
     if not prev_play and len(opponent_history) > 0:
         opponent_history.clear()
@@ -23,7 +23,7 @@ def player(prev_play,
         state['patterns'] = defaultdict(lambda: defaultdict(int))
         patterns = state['patterns']
 
-    # --- 2. Record Previous Play and Update Pattern Counts ---
+    # . Record Previous Play and Update Pattern Counts
     # Record the opponent's *last* move before it is added to history
     if prev_play:
         # Check if we have enough history to form an N-length sequence
@@ -38,14 +38,14 @@ def player(prev_play,
         # Now append the new move
         opponent_history.append(prev_play)
 
-    # --- 3. Initial Moves: Play randomly (or a constant) for warm-up ---
+    # Initial Moves: Play randomly (or a constant) for warm-up 
     # We need a few moves to build up the history before we can predict
     if len(opponent_history) < N + 1:
         # Play a constant or random move during the warm-up phase
         return random.choice(
             ["R", "P", "S"])  # Constant "R" is also a fine warm-up strategy
 
-    # --- 4. Prediction Logic (N-Order Markov Chain) ---
+    # Prediction Logic (N-Order Markov Chain) 
 
     # The sequence we use for prediction is the *last N moves* in the history.
     # We are trying to predict the move that follows this sequence.
@@ -64,7 +64,7 @@ def player(prev_play,
     # from shorter sequences (e.g., N-1). Let's stick with the most reliable pattern
     # prediction above, which defaults to random if the N-length pattern is new.
 
-    # --- 5. Counter the predicted move ---
+    # Counter the predicted move
     counter_moves = {"R": "P", "P": "S", "S": "R"}
 
     return counter_moves[prediction]
